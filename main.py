@@ -1,9 +1,10 @@
-import arcade
+import arcpyade
 import arcade.key as keys
 import math
 from grid import Grid
 from layer_util import get_layers, Layer
 from layers import lighten
+
 
 class MyWindow(arcade.Window):
     """ Painter Window """
@@ -105,19 +106,22 @@ class MyWindow(arcade.Window):
         self.clear()
         # UI - Layers
         for i, layer in enumerate(get_layers()):
-            if layer is None: break
+            if layer is None:
+                break
             xstart = (i % 2) * self.LAYER_BUTTON_SIZE + self.DRAW_PANEL
             xend = ((i % 2)+1) * self.LAYER_BUTTON_SIZE + self.DRAW_PANEL
             ystart = self.SCREEN_HEIGHT - (i//2) * self.LAYER_BUTTON_SIZE
             yend = self.SCREEN_HEIGHT - (i//2+1) * self.LAYER_BUTTON_SIZE
-            bg = lighten.apply(layer.bg or self.BG[:], 0, 0, 0) if self.selected_layer_index == i else (layer.bg or self.BG[:])
+            bg = lighten.apply(layer.bg or self.BG[:], 0, 0, 0) if self.selected_layer_index == i else (
+                layer.bg or self.BG[:])
             if not self.enable_ui:
                 bg = lighten.apply(bg, 0, 0, 0)
             arcade.draw_lrtb_rectangle_filled(xstart, xend, ystart, yend, bg)
             arcade.draw_lrtb_rectangle_outline(
                 xstart, xend, ystart, yend, (0, 0, 0), border_width=1,
             )
-            arcade.draw_text(str(i), xstart, (ystart+yend)/2, (0, 0, 0), 18, width=xend-xstart, align="center", bold=True, anchor_y="center")
+            arcade.draw_text(str(i), xstart, (ystart+yend)/2, (0, 0, 0), 18,
+                             width=xend-xstart, align="center", bold=True, anchor_y="center")
         # UI - Draw Modes / Action buttons
         self.action_buttons.draw()
         # Grid
@@ -128,7 +132,8 @@ class MyWindow(arcade.Window):
                     self.GRID_SQ_WIDTH * (x+1),
                     self.GRID_SQ_HEIGHT * (y+1),
                     self.GRID_SQ_HEIGHT * y,
-                    self.grid[x][y].get_color(self.BG[:], self.timestamp, x, y),
+                    self.grid[x][y].get_color(
+                        self.BG[:], self.timestamp, x, y),
                 )
 
     def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> None:
@@ -138,7 +143,8 @@ class MyWindow(arcade.Window):
                 return
             # Buttons
             for i, layer in enumerate(get_layers()):
-                if layer is None: break
+                if layer is None:
+                    break
                 xstart = (i % 2) * self.LAYER_BUTTON_SIZE + self.DRAW_PANEL
                 xend = ((i % 2)+1) * self.LAYER_BUTTON_SIZE + self.DRAW_PANEL
                 ystart = self.SCREEN_HEIGHT - (i//2) * self.LAYER_BUTTON_SIZE
@@ -191,7 +197,7 @@ class MyWindow(arcade.Window):
         """Called when the mouse moves."""
         if not self.dragging:
             return
-        if not(0 <= self.selected_layer_index < len(get_layers())):
+        if not (0 <= self.selected_layer_index < len(get_layers())):
             return
         if x > self.DRAW_PANEL:
             return
@@ -335,11 +341,13 @@ class MyWindow(arcade.Window):
         """Called when a decrease to the brush size is requested."""
         self.grid.decrease_brush_size()
 
+
 def main():
     """ Main function """
     window = MyWindow()
     window.setup()
     arcade.run()
+
 
 def run_with_func(func, pause=False):
     from threading import Thread
